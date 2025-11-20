@@ -1,7 +1,7 @@
 'use client';
 
 import { NavTools, STEPS } from '@/app/config';
-import { useWatchStore } from '@/app/store';
+import { usePoloStore } from '@/app/store';
 import Image from 'next/image';
 
 export default function NavigationBar() {
@@ -11,11 +11,7 @@ export default function NavigationBar() {
     nextSection,
     autoRotate,
     setAutoRotate,
-    resetConfiguration,
-    saveConfiguration,
-    setShowGuide,
-    setResetCamera,
-  } = useWatchStore();
+  } = usePoloStore();
 
   const totalSteps = STEPS.length;
   const isFirstStep = activeSection === 0;
@@ -53,7 +49,7 @@ export default function NavigationBar() {
   // };
 
   return (
-    <div className=" fixed lg:absolute w-full lg:w-fit bottom-0 left-1/2 -translate-x-1/2 flex items-center justify-center border-t border-black/10 backdrop-blur-md p-2 gap-2 lg:p-6 lg:gap-10 pl-9">
+    <div className=" fixed  lg:absolute w-full lg:w-fit bottom-0 left-1/2 -translate-x-1/2 flex items-center justify-center border-t border-black/10 backdrop-blur-md p-2 gap-2 lg:p-6 lg:gap-10 pl-9">
       <div className="flex justify-center items-center border bg-[#F4E4E4] border-white/10 rounded-full">
         {NavTools.map((tool, index) => {
           if (index >= 2) return null;

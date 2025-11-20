@@ -4,17 +4,9 @@ import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
 import { Suspense, useState, useEffect, useRef } from 'react';
 import Watch3DModel from './Watch3DModel';
-import { useWatchStore } from '@/app/store';
+import { usePoloStore } from '@/app/store';
 
-interface WatchViewerProps {
-  config: {
-    internalDisplayTexture: string;
-    strapTexture: string;
-    watchBaseTexture: string;
-    materialOption: number;
-    [key: string]: any;
-  };
-}
+
 
 // Simple 3D loading placeholder inside canvas
 function Loader() {
@@ -23,23 +15,10 @@ function Loader() {
 
 // Camera controller component
 function CameraController() {
-  const { autoRotate, resetCamera, setResetCamera } = useWatchStore();
+  const { autoRotate, config} = usePoloStore();
   const controlsRef = useRef<any>(null);
   const { camera } = useThree();
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
-
-  useEffect(() => {
-    if (resetCamera && controlsRef.current) {
-      // Reset camera to initial position
-      camera.position.set(
-        isMobile ? 0 : 0,
-        isMobile ? 2 : 3,
-        isMobile ? 5 : 8
-      );
-      controlsRef.current.reset();
-      setResetCamera(false);
-    }
-  }, [resetCamera, camera, isMobile, setResetCamera]);
 
   return (
     <OrbitControls 
@@ -55,7 +34,7 @@ function CameraController() {
   );
 }
 
-export default function WatchViewer({ config }: WatchViewerProps) {
+export default function WatchViewer() {
   // Detect if mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
   const [isLoading, setIsLoading] = useState(true);

@@ -1,37 +1,97 @@
 'use client';
 
 import { ChevronRight } from 'lucide-react';
-import { STEPS } from '@/app/config';
+import { items, STEPS } from '@/app/config';
 import Image from 'next/image';
-import { useWatchStore } from '@/app/store';
+import { usePoloStore } from '@/app/store';
+import PricePanel from './PricePanel';
 
 export default function ConfigPanel() {
   // Get all state from Zustand store
   const {
     activeSection,
-    colorOption,
-    internalDisplayTexture,
-    strapTexture,
-    watchBaseTexture,
-    setActiveSection,
-    setInternalDisplayTexture,
-    setStrapTexture,
-    setWatchBaseTexture,
+    config,
     previousSection,
     nextSection,
-  } = useWatchStore();
+    activeItem,
+    setBodyColor,
+    setBodyMaterial,
+    setBodyType,
+    setCollarColor,
+    setCollarMaterial,
+    setCollarType,
+    setSleeveColor,
+    setSleeveMaterial,
+    setSleeveType,
+    setButtonsColor,
+    setButtonsMaterial,
+    setButtonsType,
+  } = usePoloStore();
   
   const currentStep = activeSection;
   const totalSteps = STEPS.length;
   
-  const handleChangeColor = (index: number) => {
-    // Update the appropriate texture based on current color option (mesh part)
-    if(colorOption === 1){
-      setInternalDisplayTexture(index);
-    }else if(colorOption === 0){
-      setStrapTexture(index);
-    }else if(colorOption === 2){
-      setWatchBaseTexture(index);
+  // Helper function to get the current selected value
+  const getSelectedValue = () => {
+    if(activeSection === 0){
+      if(activeItem === 0) return config.bodytype;
+      if(activeItem === 1) return config.collartype;
+      if(activeItem === 2) return config.buttonstype;
+      if(activeItem === 3) return config.sleevetype;
+    }else if(activeSection === 1){
+      if(activeItem === 0) return config.bodymaterial;
+      if(activeItem === 1) return config.collarmaterial;
+      if(activeItem === 2) return config.buttonmaterial;
+      if(activeItem === 3) return config.slevematerial;
+    }else if(activeSection === 2){
+      if(activeItem === 0) return config.buttonstype;
+      if(activeItem === 1) return config.buttonmaterial;
+      if(activeItem === 2) return config.buttoncolor;
+    }else if(activeSection === 3){
+      if(activeItem === 0) return config.sleevetype;
+      if(activeItem === 1) return config.slevematerial;
+      if(activeItem === 2) return config.sleevecolor;
+    }
+    return 0;
+  };
+  
+  const handleChange = (index: number) => {
+    if(activeSection === 0){
+      if(activeItem === 0){ 
+        setBodyType(index);
+      }else if(activeItem === 1){
+        setCollarType(index);
+      }else if(activeItem === 2){
+        setButtonsType(index);
+      }else if(activeItem === 3){
+        setSleeveType(index);
+      }
+    }else if(activeSection === 1){
+      if(activeItem === 0){
+        setBodyMaterial(index);
+      }else if(activeItem === 1){
+        setCollarMaterial(index);
+      }else if(activeItem === 2){
+        setButtonsMaterial(index);
+      }else if(activeItem === 3){
+        setSleeveMaterial(index);
+      }
+    }else if(activeSection === 2){
+      if(activeItem === 0){
+        setButtonsType(index);
+      }else if(activeItem === 1){
+        setButtonsMaterial(index);
+      }else if(activeItem === 2){
+        setButtonsColor(index);
+      } 
+    }else if(activeSection === 3){
+      if(activeItem === 0){
+        setSleeveType(index);
+      }else if(activeItem === 1){
+        setSleeveMaterial(index);
+      }else if(activeItem === 2){
+        setSleeveColor(index);
+      }
     }
   };
 
@@ -39,74 +99,38 @@ export default function ConfigPanel() {
   const basePrice = 699.00;
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col space-y-6 overflow-y-auto custom-scrollbar">
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto p-6 lg:py-8 px-0 space-y-6">
+      <div className="flex-1  p-6 mx-2 lg:mx-0 lg:py-8 px-0 ">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-3">Polo T-shirt</h1>
-          <p className="text-gray-600 text-sm lg:text-base leading-relaxed max-w-md">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-          </p>
+        <div className='text-center'>
+          <h1 className="text-2xl lg:text-3xl lg:text-5xl font-bold text-gray-900 mb-3">Polo T-shirt</h1>
         </div>
 
         {/* Select Fabric Section */}
         <div className="bg-white rounded-2xl shadow-sm p-6 space-y-4">
-          <div>
-            <h2 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-1">Select fabric</h2>
-            <p className="text-gray-500 text-sm">Lorem Ipsum is simply dummy text.</p>
+          <div> 
+          <h2 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-1">{STEPS[activeSection].subtitle}</h2>
           </div>
-
-          {/* Color Grid */}
-          {currentStep === 2 && (STEPS[2]?.children?.[colorOption] as any)?.color && (
-            <div className="grid grid-cols-3 gap-4">
-              {((STEPS[currentStep].children[colorOption] as any)?.color || []).slice(0, 6).map((colorOpt: any, index: number) => {
-                const isSelected = (colorOption === 1 && internalDisplayTexture === index) || 
-                                  (colorOption === 0 && strapTexture === index) || 
-                                  (colorOption === 2 && watchBaseTexture === index);
-                
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleChangeColor(index)}
-                    className={`relative aspect-square rounded-xl border-2 transition-all duration-200 overflow-hidden group
-                      ${isSelected 
-                        ? 'border-gray-900 shadow-lg scale-105' 
-                        : 'border-gray-200 hover:border-gray-400 hover:scale-102'
-                      }`}
-                  >
-                    <Image 
-                      src={`/textures/${colorOpt.texture}`} 
-                      alt={colorOpt.title} 
-                      width={150} 
-                      height={150} 
-                      className='w-full h-full object-cover'
-                    />
-                    {/* Show hex color on first item as in the design */}
-                    {index === 0 && (
-                      <div className="absolute bottom-2 left-2 bg-white/90 px-2 py-1 rounded text-xs font-medium text-gray-700">
-                        F7E7F7
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          <div className="grid grid-cols-3 justify-items-center gap-y-2">
+            {activeItem == 2 && activeSection == 2? (STEPS[activeSection]?.children?.[activeItem] as any[] || []).filter((body: any) => body.material === config.bodymaterial).map((body: any, index: number) => (
+                <div key={index} 
+                onClick={() => handleChange(index)}
+                className={`flex items-center justify-center border rounded-xl p-1 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer ${getSelectedValue() === index ? 'border-red-500 border-2' : 'border-gray-200'}`}>
+                  <Image src={`/textures/${body.texture}`} alt={body.title} width={100} height={100} className="lg:w-[100px] lg:h-[100px] w-[80px] h-[80px] object-cover rounded-lg" />
+                </div>    
+              )):(STEPS[activeSection]?.children?.[activeItem] as any[] || []).map((body: any, index: number) => (
+                <div key={index} onClick={() => handleChange(index)} className={`flex items-center justify-center border rounded-xl p-1 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer ${getSelectedValue() === index ? 'border-red-500 border-2' : 'border-gray-200'}`}>
+                  <Image src={`/textures/${body.texture}`} alt={body.title} width={100} height={100} className="lg:w-[100px] lg:h-[100px] w-[80px] h-[80px] object-cover rounded-lg" />
+                </div>    
+              ))}  
+          </div>  
         </div>
-
-        {/* Price Section */}
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Price</h3>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Total price</span>
-            <span className="text-3xl font-bold text-gray-900">${basePrice.toFixed(2)}</span>
-          </div>
-        </div>
-      </div>
+      </div> 
+      <PricePanel />
 
       {/* Bottom Navigation Bar */}
-      <div className="bg-red-600 text-white p-4 flex items-center justify-between">
+      <div className="fixed bottom-[70px] w-[100vw] lg:w-[100%] lg:bottom-0 lg:relative bg-red-600 text-white p-4 flex items-center justify-between">
         <button 
           onClick={previousSection}
           disabled={currentStep === 0}
@@ -124,10 +148,38 @@ export default function ConfigPanel() {
           disabled={currentStep === totalSteps - 1}
           className="flex items-center gap-2 uppercase font-semibold text-sm tracking-wide disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
         >
-          COLOR
+          {STEPS[currentStep].title}
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
+      
+      {/* Custom Scrollbar Styles */}
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #ef4444,rgb(190, 84, 84));
+          border-radius: 10px;
+          transition: background 0.3s ease;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg,rgb(214, 105, 105),rgb(161, 63, 63));
+        }
+        
+        /* Firefox */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color:rgba(241, 159, 159, 0.83) #f1f1f1;
+        }
+      `}</style>
     </div>
   );
 }

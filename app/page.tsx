@@ -6,12 +6,11 @@ import ConfigSidebar from '@/components/watch/ConfigSidebar';
 import ConfigPanel from '@/components/watch/ConfigPanel';
 import PricePanel from '@/components/watch/PricePanel';
 import NavigationBar from '@/components/watch/NavigationBar';
-import GuideModal from '@/components/watch/GuideModal';
 import ToastNotification from '@/components/ToastNotification';
 import GlobalLoader from '@/components/GlobalLoader';
 import Image from 'next/image';
 import { useGLTF } from '@react-three/drei';
-import { useWatchStore } from './store';
+import { usePoloStore } from './store';
 
 export default function Home() {
   // Use Zustand store
@@ -24,16 +23,9 @@ export default function Home() {
     setIsAppLoading,
     setLoadingProgress,
     setActiveSection,
-    setColorOption,
-    setMaterialOption,
-    setTypeOption,
-    setSelectedMeshPart,
-    setInternalDisplayTexture,
-    setStrapTexture,
-    setWatchBaseTexture,
     setToastMessage,
     updateConfig,
-  } = useWatchStore();
+  } = usePoloStore();
 
   // Initialize config on mount
   useEffect(() => {
@@ -100,19 +92,15 @@ export default function Home() {
                 <Image src="/images/logo.png" alt="logo" width={256} height={40} />
             </div>
             <div className="lg:w-[77vw] lg:h-[100vh] relative ">
-              <WatchViewer config={config} />
+              <WatchViewer />
               <NavigationBar />
               <ConfigSidebar/>
             </div>
 
-            <div className="w-[100vw] h-[35vh] lg:w-[35vw] lg:h-[100vh] space-y-6 lg:pt-16 pb-8 px-4 lg:px-0 overflow-y-auto">
+            <div className="w-[100vw] h-[32vh] lg:w-[35vw] lg:h-[100vh] space-y-6 lg:pt-16 pb-8 lg:px-4 lg:px-0 overflow-y-auto">
               <ConfigPanel/>
-              {/* <PricePanel /> */}
             </div>
         </div>
-      
-      {/* Guide Modal */}
-      <GuideModal />
       
       {/* Toast Notification */}
       {toastMessage && (
