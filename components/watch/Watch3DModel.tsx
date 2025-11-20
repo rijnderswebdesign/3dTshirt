@@ -1,19 +1,19 @@
-// 'use client';
+'use client';
 
-// import { useRef, useEffect, useState, useMemo } from 'react';
-// import { useFrame } from '@react-three/fiber';
-// import { useGLTF, useTexture } from '@react-three/drei';
-// import * as THREE from 'three';
-// import { usePoloStore } from '@/app/store';
-// import { STEPS } from '@/app/config';
+import { useRef, useEffect, useState, useMemo } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { useGLTF, useTexture } from '@react-three/drei';
+import * as THREE from 'three';
+import { usePoloStore } from '@/app/store';
+import { STEPS } from '@/app/config';
 
-// interface Watch3DModelProps {
-//   onLoaded?: () => void;
-// }
+interface Watch3DModelProps {
+  onLoaded?: () => void;
+}
 
-// export default function Watch3DModel({
-//   onLoaded
-// }: Watch3DModelProps) {
+export default function Watch3DModel({
+  onLoaded
+}: Watch3DModelProps) {
 //     // const { config, typeOption } = usePoloStore();
 //     // const {
 //     //   activeSection,
@@ -421,17 +421,17 @@
 //       <primitive object={watchModel} rotation-x={Math.PI / 8}/>
 //     </group>
 //   );
-// }
+}
 
-// // Export a hook to access mesh refs if needed
-// export function useWatchMeshRefs() {
-//   return {
-//     getAllMeshes: () => {
-//       // This would need to be implemented with context if you need external access
-//       return {};
-//     }
-//   };
-// }
+// Export a hook to access mesh refs if needed
+export function useWatchMeshRefs() {
+  return {
+    getAllMeshes: () => {
+      // This would need to be implemented with context if you need external access
+      return {};
+    }
+  };
+}
 
 // // Preload the model and textures for better performance
 // useGLTF.preload('/model/watch.glb');
