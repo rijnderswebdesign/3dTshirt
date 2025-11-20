@@ -1,8 +1,9 @@
 'use client';
 
 import { ChevronRight } from 'lucide-react';
-import { items, STEPS } from '@/app/config';
+import { items, STEPS, buttonColors } from '@/app/config';
 import Image from 'next/image';
+import { useMemo } from 'react';
 import { usePoloStore } from '@/app/store';
 import PricePanel from './PricePanel';
 
@@ -95,6 +96,9 @@ export default function ConfigPanel() {
     }
   };
 
+  const filteredButtonColors = useMemo(() => {
+    return buttonColors.filter((color: any) => color.material === config.buttonmaterial);
+  }, [config.buttonmaterial]);
   // Calculate total price (simplified for demo)
   const basePrice = 699.00;
 
@@ -113,7 +117,7 @@ export default function ConfigPanel() {
           <h2 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-1">{STEPS[activeSection].subtitle}</h2>
           </div>
           <div className="grid grid-cols-3 justify-items-center gap-y-2">
-            {activeItem == 2 && activeSection == 2? (STEPS[activeSection]?.children?.[activeItem] as any[] || []).filter((body: any) => body.material === config.bodymaterial).map((body: any, index: number) => (
+            {activeItem == 2 && activeSection == 2? filteredButtonColors.map((body: any, index: number) => (
                 <div key={index} 
                 onClick={() => handleChange(index)}
                 className={`flex items-center justify-center border rounded-xl p-1 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer ${getSelectedValue() === index ? 'border-red-500 border-2' : 'border-gray-200'}`}>

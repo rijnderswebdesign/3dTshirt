@@ -145,7 +145,7 @@ const clothColors = [
   },
 ]
 
-const buttonColors = [
+export const buttonColors = [
     {
       title: 'default_1',
       texture: 'default_1.jpg',
