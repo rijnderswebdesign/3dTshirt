@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { items } from '@/app/config';
 import Image from 'next/image';
-import RadioOptions from './RadioOptions';
 import { usePoloStore } from '@/app/store';
 
 export default function ConfigSidebar() {
