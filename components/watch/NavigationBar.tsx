@@ -3,6 +3,7 @@
 import { NavTools, STEPS } from '@/app/config';
 import { usePoloStore } from '@/app/store';
 import Image from 'next/image';
+import { useRef, useState } from 'react';
 
 export default function NavigationBar() {
   const {
@@ -11,42 +12,108 @@ export default function NavigationBar() {
     nextSection,
     autoRotate,
     setAutoRotate,
+    setUploadedLogo,
+    setIsTextModalOpen,
+    saveModelAsImage,
   } = usePoloStore();
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const totalSteps = STEPS.length;
   const isFirstStep = activeSection === 0;
   const isLastStep = activeSection === totalSteps - 1;
 
-  // const handleButtonClick = (toolId: number) => {
-  //   switch (toolId) {
-  //     case 1: // Previous
-  //       previousSection();
-  //       break;
-  //     case 2: // Next
-  //       nextSection();
-  //       break;
-  //     case 4: // Rotate
-  //       setAutoRotate(!autoRotate);
-  //       break;
-  //     case 3: // Reset
-  //       const confirmReset = window.confirm('Are you sure you want to reset all configurations to default?');
-  //       if (confirmReset) {
-  //         resetConfiguration();
-  //         setResetCamera(true);
-  //         // Reset the camera flag after a brief moment
-  //         setTimeout(() => setResetCamera(false), 100);
-  //       }
-  //       break;
-  //     case 5: // Save
-  //       saveConfiguration();
-  //       break;
-  //     case 6: // Entry Guide
-  //       setShowGuide(true);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
+  const handleToolClick = (toolId: number) => {
+    switch (toolId) {
+      case 3: // Upload
+        fileInputRef.current?.click();
+        break;
+      case 4: // Text
+        setIsTextModalOpen(true);
+        break;
+      case 5: // Save as Image
+        saveModelAsImage();
+        break;
+      case 6: // Rotate
+        setAutoRotate(!autoRotate);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const resizeImageToFit = (imageDataUrl: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = document.createElement('img');
+      img.onload = () => {
+        // Target size in pixels (using higher resolution for quality)
+        // 0.212 units at ~2400 dpi = ~512 pixels for good quality
+        const MAX_SIZE = 512;
+        
+        // Calculate aspect ratio
+        const aspectRatio = img.width / img.height;
+        let targetWidth: number;
+        let targetHeight: number;
+        
+        // Fit image within square while maintaining aspect ratio
+        if (aspectRatio > 1) {
+          // Landscape
+          targetWidth = MAX_SIZE;
+          targetHeight = MAX_SIZE / aspectRatio;
+        } else {
+          // Portrait or square
+          targetHeight = MAX_SIZE;
+          targetWidth = MAX_SIZE * aspectRatio;
+        }
+        
+        // Create canvas for resizing
+        const canvas = document.createElement('canvas');
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const ctx = canvas.getContext('2d');
+        
+        if (!ctx) {
+          reject(new Error('Could not get canvas context'));
+          return;
+        }
+        
+        // Draw resized image with high quality
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+        
+        // Convert to data URL
+        const resizedDataUrl = canvas.toDataURL('image/png', 0.95);
+        resolve(resizedDataUrl);
+      };
+      
+      img.onerror = () => {
+        reject(new Error('Failed to load image'));
+      };
+      
+      img.src = imageDataUrl;
+    });
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const imageUrl = event.target?.result as string;
+        try {
+          // Resize image to fit 0.212 x 0.212 units mesh while maintaining aspect ratio
+          const resizedImageUrl = await resizeImageToFit(imageUrl);
+          setUploadedLogo(resizedImageUrl);
+        } catch (error) {
+          console.error('Error resizing image:', error);
+          // Fallback to original if resize fails
+          setUploadedLogo(imageUrl);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className=" fixed  lg:absolute w-full lg:w-fit bottom-0 left-1/2 -translate-x-1/2 flex items-center justify-center border-t border-black/10 backdrop-blur-md p-2 gap-2 lg:p-6 lg:gap-10 pl-9">
@@ -92,7 +159,7 @@ export default function NavigationBar() {
         index >= 2 && (
           <button
             key={tool.id}
-            // onClick={() => handleButtonClick(tool.id)}
+            onClick={() => handleToolClick(tool.id)}
             className={`flex items-center justify-center transition-all duration-300 group `}
             title={tool.title}
           >
@@ -109,6 +176,17 @@ export default function NavigationBar() {
           </button>
         )
       ))}
+      
+      {/* Hidden file input for upload */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileUpload}
+      />
+      
+    
     </div>  
   );
 }

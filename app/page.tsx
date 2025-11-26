@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import WatchViewer from '@/components/watch/WatchViewer';
+import { useEffect, useState } from 'react';
+import WatchViewer from '@/components/watch/ShirtViewer';
 import ConfigSidebar from '@/components/watch/ConfigSidebar';
 import ConfigPanel from '@/components/watch/ConfigPanel';
 import PricePanel from '@/components/watch/PricePanel';
@@ -11,6 +11,7 @@ import GlobalLoader from '@/components/GlobalLoader';
 import Image from 'next/image';
 import { useGLTF } from '@react-three/drei';
 import { usePoloStore } from './store';
+import TextLogoModal from '@/components/watch/TextLogoModal';
 
 export default function Home() {
   // Use Zustand store
@@ -25,6 +26,8 @@ export default function Home() {
     setActiveSection,
     setToastMessage,
     updateConfig,
+    isTextModalOpen,
+    setIsTextModalOpen,
   } = usePoloStore();
 
   // Initialize config on mount
@@ -110,6 +113,12 @@ export default function Home() {
           onClose={() => setToastMessage(null)}
         />
       )}
+
+        {/* Text Logo Modal */}
+        <TextLogoModal 
+        isOpen={isTextModalOpen} 
+        onClose={() => setIsTextModalOpen(false)} 
+      />
     </div>
   );
 }

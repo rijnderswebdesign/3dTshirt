@@ -30,7 +30,19 @@ interface PoloState {
     collarcolor : number;
     buttoncolor : number;
     sleevecolor : number;
+    bodycolorHex:string,
+    collarcolorHex : string,
+    buttoncolorHex : string,
+    sleevecolorHex : string,
+    uploadedLogo: string | null;
+    textLogo: {
+      text: string;
+      color: string;
+      fontSize: number;
+      textureUrl: string | null;
+    } | null;
   };
+  isTextModalOpen: boolean;
   
   // Actions
   setIsAppLoading: (loading: boolean) => void;
@@ -59,6 +71,14 @@ interface PoloState {
   setCollarColor: (color: number) => void;
   setButtonsColor: (color: number) => void;
   setSleeveColor: (color: number) => void;
+  setbodycolorHex : (color: string) => void;
+  setcollarcolorHex : (color: string) => void;
+  setbuttoncolorHex : (color: string) => void;
+  setsleevecolorHex : (color: string) => void;
+  setUploadedLogo: (imageUrl: string | null) => void;
+  setTextLogo: (textLogo: { text: string; color: string; fontSize: number; textureUrl: string | null } | null) => void;
+  setIsTextModalOpen: (isOpen: boolean) => void;
+  saveModelAsImage: () => void;
 }
 
 export const usePoloStore = create<PoloState>((set, get) => ({
@@ -72,6 +92,7 @@ export const usePoloStore = create<PoloState>((set, get) => ({
   
   autoRotate: false,
   resetCamera: false,
+  isTextModalOpen: false,
   
   config: {
     activeItem: 0,
@@ -84,12 +105,17 @@ export const usePoloStore = create<PoloState>((set, get) => ({
     collarmaterial: 0,
     buttonmaterial: 0,
     slevematerial: 0,
-    bodycolor: 0,
-    collarcolor: 0,
-    buttoncolor: 0,
-    sleevecolor: 0,
+    bodycolor: -1,
+    collarcolor: -1,
+    buttoncolor: -1,
+    sleevecolor: -1,
+    buttoncolorHex : '#D8162E',
+    bodycolorHex : '#D8162E',
+    collarcolorHex : '#D8162E',
+    sleevecolorHex : '#D8162E',
+    uploadedLogo: null,
+    textLogo: null,
   },
-  
   // Actions
   setIsAppLoading: (loading) => set({ isAppLoading: loading }),
   
@@ -121,6 +147,53 @@ export const usePoloStore = create<PoloState>((set, get) => ({
   setCollarColor: (color) => set({ config: { ...get().config, collarcolor: color } }),
   setButtonsColor: (color) => set({ config: { ...get().config, buttoncolor: color } }),
   setSleeveColor: (color) => set({ config: { ...get().config, sleevecolor: color } }),
+  setbodycolorHex: (color) => set({config: { ...get().config, bodycolorHex: color } }),
+  setcollarcolorHex: (color) => set({config: { ...get().config, collarcolorHex: color } }),
+  setbuttoncolorHex: (color) => set({config: { ...get().config, buttoncolorHex: color } }),
+  setsleevecolorHex: (color) => set({config: { ...get().config, sleevecolorHex: color } }),
+  setUploadedLogo: (imageUrl) => set({config: { ...get().config, uploadedLogo: imageUrl } }),
+  setTextLogo: (textLogo) => set({config: { ...get().config, textLogo } }),
+  setIsTextModalOpen: (isOpen) => set({isTextModalOpen: isOpen }),
+  
+  // Save 3D model as image
+  saveModelAsImage: () => {
+    try {
+      // Find the canvas element
+      const canvas = document.querySelector('canvas');
+      if (!canvas) {
+        console.error('Canvas not found');
+        get().showToast('Failed to capture image', 'error');
+        return;
+      }
+
+      // Convert canvas to blob
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          console.error('Failed to create image blob');
+          get().showToast('Failed to save image', 'error');
+          return;
+        }
+
+        // Create download link
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        link.download = `shirt-design-${timestamp}.png`;
+        link.href = url;
+        link.click();
+
+        // Clean up
+        URL.revokeObjectURL(url);
+        
+        get().showToast('Image saved successfully!', 'success');
+        console.log('✅ Model saved as image');
+      }, 'image/png', 1.0);
+    } catch (error) {
+      console.error('Error saving image:', error);
+      get().showToast('Failed to save image', 'error');
+    }
+  },
+  
   // Navigation Actions
   nextSection: () => {
     const state = get();
@@ -215,6 +288,12 @@ export const usePoloStore = create<PoloState>((set, get) => ({
         collarcolor: state.config.collarcolor,
         buttoncolor: state.config.buttoncolor,
         sleevecolor: state.config.sleevecolor,
+        bodycolorHex : state.config.bodycolorHex,
+        buttoncolorHex : state.config.buttoncolorHex,
+        collarcolorHex : state.config.collarcolorHex,
+        sleevecolorHex : state.config.sleevecolorHex,
+        uploadedLogo: state.config.uploadedLogo,
+        textLogo: state.config.textLogo
       }
     });
   },

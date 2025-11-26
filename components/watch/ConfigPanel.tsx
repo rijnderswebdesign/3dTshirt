@@ -3,9 +3,10 @@
 import { ChevronRight } from 'lucide-react';
 import { items, STEPS, buttonColors } from '@/app/config';
 import Image from 'next/image';
-import { useMemo } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import { usePoloStore } from '@/app/store';
 import PricePanel from './PricePanel';
+import ColorSlider from './ColorSlider';
 
 export default function ConfigPanel() {
   // Get all state from Zustand store
@@ -27,6 +28,10 @@ export default function ConfigPanel() {
     setButtonsColor,
     setButtonsMaterial,
     setButtonsType,
+    setbodycolorHex,
+    setcollarcolorHex,
+    setbuttoncolorHex,
+    setsleevecolorHex,
   } = usePoloStore();
   
   const currentStep = activeSection;
@@ -34,6 +39,7 @@ export default function ConfigPanel() {
   
   // Helper function to get the current selected value
   const getSelectedValue = () => {
+    console.log('Active section:', activeSection, activeItem);
     if(activeSection === 0){
       if(activeItem === 0) return config.bodytype;
       if(activeItem === 1) return config.collartype;
@@ -45,13 +51,10 @@ export default function ConfigPanel() {
       if(activeItem === 2) return config.buttonmaterial;
       if(activeItem === 3) return config.slevematerial;
     }else if(activeSection === 2){
-      if(activeItem === 0) return config.buttonstype;
-      if(activeItem === 1) return config.buttonmaterial;
+      if(activeItem === 0) return config.bodycolor;
+      if(activeItem === 1) return config.collarcolor;
       if(activeItem === 2) return config.buttoncolor;
-    }else if(activeSection === 3){
-      if(activeItem === 0) return config.sleevetype;
-      if(activeItem === 1) return config.slevematerial;
-      if(activeItem === 2) return config.sleevecolor;
+      if(activeItem === 3) return config.sleevecolor;
     }
     return 0;
   };
@@ -79,18 +82,12 @@ export default function ConfigPanel() {
       }
     }else if(activeSection === 2){
       if(activeItem === 0){
-        setButtonsType(index);
+        setBodyColor(index);
       }else if(activeItem === 1){
-        setButtonsMaterial(index);
+        setCollarColor(index);
       }else if(activeItem === 2){
-        setButtonsColor(index);
-      } 
-    }else if(activeSection === 3){
-      if(activeItem === 0){
-        setSleeveType(index);
-      }else if(activeItem === 1){
-        setSleeveMaterial(index);
-      }else if(activeItem === 2){
+        setButtonsColor(index); 
+      }else if(activeItem === 3){
         setSleeveColor(index);
       }
     }
@@ -99,6 +96,25 @@ export default function ConfigPanel() {
   const filteredButtonColors = useMemo(() => {
     return buttonColors.filter((color: any) => color.material === config.buttonmaterial);
   }, [config.buttonmaterial]);
+  
+  // Handle color slider change
+  const handleColorChange = (hex: string) => {
+    // Update button color hex in the store (since color slider is shown in section 2 - buttons)
+    if(activeItem === 0){
+      setbodycolorHex(hex);
+      setBodyColor(-1);
+    }else if(activeItem === 1){
+      setcollarcolorHex(hex);
+      setCollarColor(-1);
+    }else if(activeItem === 2){
+      setbuttoncolorHex(hex); 
+      setButtonsColor(-1);
+    }else if(activeItem === 3){
+      setsleevecolorHex(hex);
+      setSleeveColor(-1);
+    }
+  };
+  
   // Calculate total price (simplified for demo)
   const basePrice = 699.00;
 
@@ -116,6 +132,11 @@ export default function ConfigPanel() {
           <div> 
           <h2 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-1">{STEPS[activeSection].subtitle}</h2>
           </div>
+          {/* Color Slider */}
+          {activeSection == 2 && (<div style={{marginBottom:'30px'}}>
+            <ColorSlider onColorChange={handleColorChange} defaultValue={0} />
+          </div>)}
+          
           <div className="grid grid-cols-3 justify-items-center gap-y-2">
             {activeItem == 2 && activeSection == 2? filteredButtonColors.map((body: any, index: number) => (
                 <div key={index} 
@@ -131,6 +152,31 @@ export default function ConfigPanel() {
           </div>  
         </div>
       </div> 
+      {/* Uploaded Logo Preview */}
+      {activeSection === 0 && activeItem === 0 && config.uploadedLogo && (
+        <div className="p-6 mx-2 lg:mx-0">
+          <div className="bg-white rounded-2xl shadow-sm p-6 space-y-4">
+            <h2 className="text-xl lg:text-xl font-semibold text-gray-900 mb-4">Geüpload Logo</h2>
+            <div className="space-y-4 flex flex-col items-center justify-center">
+              <div className="relative lg:w-[150px] lg:h-[150px] w-[100px] h-[100px] items-center justify-center bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
+                <Image
+                  src={config.uploadedLogo} 
+                  alt="Uploaded logo" 
+                  width={100}
+                  height={100}
+                  className="lg:w-[150px] lg:h-[150px] w-[100px] h-[100px] object-contain"
+                />
+              </div>
+              <button
+                onClick={() => usePoloStore.getState().setUploadedLogo(null)}
+                className="w-full py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
+              >
+                Verwijder Logo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <PricePanel />
 
       {/* Bottom Navigation Bar */}
@@ -140,11 +186,11 @@ export default function ConfigPanel() {
           disabled={currentStep === 0}
           className="uppercase font-semibold text-sm tracking-wide disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
         >
-          BACK
+          TERUG
         </button>
         
         <div className="text-sm font-medium">
-          {currentStep + 1} OF {totalSteps} STEPS
+          {currentStep + 1} VAN {totalSteps} STAPPEN
         </div>
         
         <button 

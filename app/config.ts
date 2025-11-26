@@ -21,7 +21,7 @@ export const items = [
   },
   
 ];
-const clothMaterials = [
+export const clothMaterials = [
   {
     title: 'material_1',
     texture: 'material_1.jpg',
@@ -59,7 +59,7 @@ const clothMaterials = [
   }, 
 ]
 
-const buttonMaterials = [
+export const buttonMaterials = [
   {
     title: 'buttonMaterial_1',
     texture: 'buttonM_1.jpg',
@@ -82,7 +82,7 @@ const buttonMaterials = [
   },
 ]
 
-const clothColors = [
+export const clothColors = [
   {
     title: 'default_1',
     texture: 'default_1.jpg',
@@ -276,13 +276,14 @@ export const STEPS = [
         {
           title: 'body_1',
           texture: 'body_1.jpg',
-          price : 100,
+          price : 0,
         },
         {
           title: 'body_2',
           texture: 'body_2.jpg',
-          price : 200,
+          price : 10,
         },
+       
       ],
       [
         {
@@ -298,39 +299,29 @@ export const STEPS = [
         {
           title : 'collar_3',
           texture: 'collar_3.jpg',
-          price : 20,
+          price : 5,
         },
         {
           title : 'collar_4',
           texture: 'collar_4.jpg',
-          price : 25,
-        },
-        {
-          title : 'collar_5',
-          texture: 'collar_5.jpg',
-          price : 30,
+          price : 5,
         },
       ],
       [
         {
           title: 'buttons_1',
           texture: 'button_1.jpg',
-          price : 0,
+          price : 5,
         },
         {
           title: 'buttons_2',
           texture: 'button_2.jpg',
-          price : 1,
-        },
-        {
-          title: 'buttons_3',
-          texture: 'button_3.jpg',
-          price : 1.5,
+          price : 4,
         },
         {
           title: 'buttons_4',
           texture: 'button_4.jpg',
-          price : 1,
+          price : 10,
         },
       ],
       [
@@ -338,7 +329,7 @@ export const STEPS = [
           {
             title: 'sleeve_1',
             texture: 'sleeve_1.jpg',
-            price : 5,
+            price : 8,
           },
           {
             title: 'sleeve_2',
