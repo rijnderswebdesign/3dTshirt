@@ -34,7 +34,7 @@ function CameraController() {
   );
 }
 
-export default function WatchViewer() {
+export default function ShirtViewer() {
   // Detect if mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
   const [isLoading, setIsLoading] = useState(true);

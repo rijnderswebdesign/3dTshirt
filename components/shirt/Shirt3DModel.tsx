@@ -23,7 +23,7 @@ export default function   Shirt3DModel({
     duration: typeof window !== 'undefined' && window.innerWidth < 768 ? 800 : 1200 // Faster on mobile
   });
   
-  // Refs for all watch parts
+  // Refs for all shirt parts
   const meshRefs = useRef<{ [key: string]: THREE.Mesh }>({});
 
   // Load the 3D model
