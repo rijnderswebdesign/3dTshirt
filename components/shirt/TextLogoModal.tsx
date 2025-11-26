@@ -24,13 +24,13 @@ export default function TextLogoModal({ isOpen, onClose }: TextLogoModalProps) {
     
     // Check max lines
     if (lines.length > MAX_LINES) {
-      return { isValid: false, error: `Maximum ${MAX_LINES} lines allowed` };
+      return { isValid: false, error: `Maximaal ${MAX_LINES} regels toegestaan` };
     }
     
     // Check each line length
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].length > MAX_CHARS_PER_LINE) {
-        return { isValid: false, error: `Line ${i + 1}: Maximum ${MAX_CHARS_PER_LINE} characters per line` };
+        return { isValid: false, error: `Regel ${i + 1}: Maximaal ${MAX_CHARS_PER_LINE} tekens per regel` };
       }
     }
     
@@ -177,18 +177,18 @@ export default function TextLogoModal({ isOpen, onClose }: TextLogoModalProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-        <h2 className="text-2xl font-bold mb-4">Add Text Logo</h2>
+        <h2 className="text-2xl font-bold mb-4">Tekstlogo toevoegen</h2>
         
         <div className="space-y-4">
           {/* Text Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Text
+              Tekst
             </label>
             <textarea
               value={text}
               onChange={(e) => handleTextChange(e.target.value)}
-              placeholder="Enter your text... (max 7 chars per line, 3 lines)"
+              placeholder="Voer uw tekst in... (max 7 tekens per regel, 3 regels)"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={3}
               maxLength={MAX_CHARS_PER_LINE * MAX_LINES + (MAX_LINES - 1)} // Account for line breaks
@@ -199,11 +199,11 @@ export default function TextLogoModal({ isOpen, onClose }: TextLogoModalProps) {
             <div className="text-xs text-gray-500 mt-1">
               {text.split('\n').map((line, idx) => (
                 <div key={idx} className={line.length > MAX_CHARS_PER_LINE ? 'text-red-500' : ''}>
-                  Line {idx + 1}: {line.length}/{MAX_CHARS_PER_LINE} characters
+                  Regel {idx + 1}: {line.length}/{MAX_CHARS_PER_LINE} tekens
                 </div>
               ))}
               <div className={text.split('\n').length > MAX_LINES ? 'text-red-500' : 'text-blue-600'}>
-                Total: {text.split('\n').length}/{MAX_LINES} lines
+                Totaal: {text.split('\n').length}/{MAX_LINES} regels
               </div>
             </div>
           </div>
@@ -211,7 +211,7 @@ export default function TextLogoModal({ isOpen, onClose }: TextLogoModalProps) {
           {/* Color Picker */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Text Color
+              Tekstkleur
             </label>
             <div className="flex items-center gap-2">
               <input
@@ -232,12 +232,12 @@ export default function TextLogoModal({ isOpen, onClose }: TextLogoModalProps) {
           {/* Font Size Slider */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Font Size: {fontSize}px
+              Lettergrootte: {fontSize}px
             </label>
             <input
               type="range"
-              min="24"
-              max="48"
+              min="80"
+              max="120"
               value={fontSize}
               onChange={(e) => setFontSize(Number(e.target.value))}
               className="w-full"
@@ -246,12 +246,12 @@ export default function TextLogoModal({ isOpen, onClose }: TextLogoModalProps) {
 
           {/* Preview */}
           <div className="border border-gray-300 rounded-md p-4 bg-gray-50">
-            <p className="text-xs text-gray-500 mb-2">Preview:</p>
+            <p className="text-xs text-gray-500 mb-2">Voorbeeld:</p>
             <div 
               className="text-center font-bold whitespace-pre-wrap"
               style={{ color, fontSize: `${fontSize / 2}px` }}
             >
-              {text || 'Your text here'}
+              {text || 'Uw tekst hier'}
             </div>
           </div>
         </div>
@@ -262,19 +262,19 @@ export default function TextLogoModal({ isOpen, onClose }: TextLogoModalProps) {
             onClick={handleRemove}
             className="flex-1 px-4 py-2 border border-red-300 text-red-600 rounded-md hover:bg-red-50 transition-colors"
           >
-            Remove
+            Verwijderen
           </button>
           <button
             onClick={onClose}
             className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
           >
-            Cancel
+            Annuleren
           </button>
           <button
             onClick={handleSave}
             className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
-            Save
+            Opslaan
           </button>
         </div>
       </div>

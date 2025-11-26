@@ -351,14 +351,14 @@ export default function   Shirt3DModel({
     }
     
     // ==================== UPLOADED LOGO ====================
-    if (meshName === 'Belly_Logo') {
+    if (meshName === 'Front_Pocket') {
       return config.uploadedLogo !== null;
     }
     
     // ==================== TEXT LOGO ====================
-    if (meshName === 'Front_Pocket') {
+    if (meshName === 'Belly_Logo') {
       const isVisible = config.textLogo !== null;
-      console.log('👁️ Front_Pocket visibility check:', { isVisible, hasTextLogo: !!config.textLogo });
+      console.log('👁️ Belly_Logo visibility check:', { isVisible, hasTextLogo: !!config.textLogo });
       return isVisible;
     }
     
@@ -611,7 +611,7 @@ export default function   Shirt3DModel({
             }
           }
           // Uploaded Logo
-          else if (meshName === 'Belly_Logo') {
+          else if (meshName === 'Front_Pocket') {
             
             if(uploadedLogoTexture){
               uploadedLogoTexture.wrapS = THREE.RepeatWrapping
@@ -634,7 +634,7 @@ export default function   Shirt3DModel({
             
           }
           // Text Logo on Front Pocket
-          else if (meshName === 'Front_Pocket') {
+          else if (meshName === 'Belly_Logo') {
            
             // Dispose old texture if exists
             if (child.material.map && child.material.map !== textLogoTexture) {

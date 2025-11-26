@@ -351,14 +351,14 @@ export default function   Shirt3DModel({
     }
     
     // ==================== UPLOADED LOGO ====================
-    if (meshName === 'Belly_Logo') {
+    if (meshName === 'Front_Pocket') {
       return config.uploadedLogo !== null;
     }
     
     // ==================== TEXT LOGO ====================
-    if (meshName === 'Front_Pocket') {
+    if (meshName === 'Belly_Logo') {
       const isVisible = config.textLogo !== null;
-      console.log('👁️ Front_Pocket visibility check:', { isVisible, hasTextLogo: !!config.textLogo });
+      console.log('👁️ Belly_Logo visibility check:', { isVisible, hasTextLogo: !!config.textLogo });
       return isVisible;
     }
     
@@ -380,17 +380,12 @@ export default function   Shirt3DModel({
         allMeshNames.push(child.name);
       }
     });
-    console.log('🔍 All mesh names in model:', allMeshNames);
-    console.log('🔍 Looking for Front_Pokcet:', allMeshNames.includes('Front_Pocket'));
+
     
     shirtModel.traverse((child: any) => {
       if (child.isMesh) {
         const meshName = child.name;
         
-        // Debug Front_Pokcet specifically
-        if (meshName === 'Front_Pocket') {
-          console.log('🎯 Found Front_Pocket mesh in traverse!');
-        }
         
         // Store reference to all mesh parts
         meshRefs.current[meshName] = child;
@@ -398,11 +393,6 @@ export default function   Shirt3DModel({
         // Control visibility based on shirt configuration
         const shouldBeVisible = isPartVisible(meshName);
         child.visible = shouldBeVisible;
-        
-        if (meshName === 'Front_Pocket') {
-          console.log('🔧 Setting Front_Pocket visibility:', shouldBeVisible);
-        }
-        
         
         // Clone material to avoid affecting other instances (only once)
         if (!child.userData.materialCloned) {
@@ -611,13 +601,13 @@ export default function   Shirt3DModel({
             }
           }
           // Uploaded Logo
-          else if (meshName === 'Belly_Logo') {
+          else if (meshName === 'Front_Pocket') {
             
             if(uploadedLogoTexture){
               uploadedLogoTexture.wrapS = THREE.RepeatWrapping
               uploadedLogoTexture.wrapT = THREE.RepeatWrapping
-              uploadedLogoTexture.repeat.set(-0.5, 0.6)
-              uploadedLogoTexture.offset.set(0.35, -0.2)
+              uploadedLogoTexture.repeat.set(0.2, -0.2)
+              uploadedLogoTexture.offset.set(0.4, 0.6)
             }
      
             
@@ -628,16 +618,17 @@ export default function   Shirt3DModel({
             child.material.roughness = 0.8;
             child.material.envMapIntensity = 0.5;
             child.material.transparent = true;
+            child.material.alphaTest = 0.1;
             child.material.castShadow = true;
-            child.material.side = THREE.FrontSide;
+            child.material.side = THREE.DoubleSide;
             child.material.needsUpdate = true;
             
           }
           // Text Logo on Front Pocket
-          else if (meshName === 'Front_Pocket') {
+          else if (meshName === 'Belly_Logo') {
            
             // Dispose old texture if exists
-            if (child.material.map && child.material.map !== textLogoTexture) {
+            if (child.material.map && child.material.map !== uploadedLogoTexture) {
               child.material.map.dispose();
             }
             
@@ -688,21 +679,16 @@ export default function   Shirt3DModel({
                 
                 textLogoTexture.wrapS = THREE.ClampToEdgeWrapping;
                 textLogoTexture.wrapT = THREE.ClampToEdgeWrapping;
-                textLogoTexture.repeat.set(repeatX, repeatY);
-                textLogoTexture.offset.set(offsetX, offsetY);
+                textLogoTexture.repeat.set(-1, -1)
+                textLogoTexture.offset.set(0.25, 2)
                 textLogoTexture.needsUpdate = true;
                 
-                console.log('✅ Text texture applied with scale:', {
-                  repeat: { x: repeatX, y: repeatY },
-                  offset: { x: offsetX, y: offsetY },
-                  scaleFactor
-                });
               } else {
                 // Fallback if no UV attribute
-                textLogoTexture.wrapS = THREE.ClampToEdgeWrapping;
-                textLogoTexture.wrapT = THREE.ClampToEdgeWrapping;
-                textLogoTexture.repeat.set(1, 1);
-                textLogoTexture.offset.set(0, 0);
+                textLogoTexture.wrapS = THREE.RepeatWrapping
+                textLogoTexture.wrapT = THREE.RepeatWrapping
+                textLogoTexture.repeat.set(-0.5, 0.6)
+                textLogoTexture.offset.set(0.35, -0.2)
                 textLogoTexture.needsUpdate = true;
                 console.log('✅ Text texture applied (default scale)');
               }

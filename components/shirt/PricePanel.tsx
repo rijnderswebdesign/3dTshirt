@@ -81,7 +81,7 @@ console.log(bodyTypePrice, collarTypePrice, buttonTypePrice, sleeveTypePrice, bo
           
           {/* Material Price */}
           <div className="flex justify-between items-center pl-4">
-            <span className="text-black/80">Material</span>
+            <span className="text-black/80">Materiaal</span>
             <span className={ "text-black/60"}>
               {prices.material > 0 ? `${formatPriceNL(prices.material)}` : formatPriceNL(0)}
             </span>

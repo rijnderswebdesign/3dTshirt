@@ -270,7 +270,7 @@ export const buttonColors = [
 export const STEPS = [
   {
     title: 'Type',
-    subtitle : 'Select your type',
+    subtitle : 'Selecteer uw type',
     children : [
       [
         {
@@ -341,8 +341,8 @@ export const STEPS = [
   },
 
   {
-    title: 'Materials',
-    subtitle : 'Select your materials',
+    title: 'Materialen',
+    subtitle : 'Selecteer uw materialen',
     children : [
       clothMaterials,
       clothMaterials,
@@ -351,8 +351,8 @@ export const STEPS = [
     ]
   },
   {
-    title: 'Colors',
-    subtitle : 'Select your colors',
+    title: 'Kleuren',
+    subtitle : 'Selecteer uw kleuren',
     children : [
       clothColors,
       clothColors,
@@ -365,32 +365,32 @@ export const STEPS = [
 export const NavTools = [
   {
     id: 1,
-    title: 'Previous',
+    title: 'Vorige',
     icon: 'prev.svg',
   },
   {
     id: 2,
-    title: 'Next',
+    title: 'Volgende',
     icon: 'next.svg',
   },
   {
     id: 3,
-    title: 'upload',
+    title: 'Uploaden',
     icon: 'upload.svg',
   },
   {
     id: 4,
-    title: 'text',
+    title: 'Tekst',
     icon: 'text.svg',
   },
   {
     id: 5,
-    title: 'Save',
+    title: 'Opslaan',
     icon: 'save.svg',
   },
   {
     id: 6,
-    title: 'rotate',
+    title: 'Roteren',
     icon: 'rotate.svg',
   }
 ];

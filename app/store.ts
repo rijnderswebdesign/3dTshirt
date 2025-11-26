@@ -162,7 +162,7 @@ export const usePoloStore = create<PoloState>((set, get) => ({
       const canvas = document.querySelector('canvas');
       if (!canvas) {
         console.error('Canvas not found');
-        get().showToast('Failed to capture image', 'error');
+        get().showToast('Kan afbeelding niet vastleggen', 'error');
         return;
       }
 
@@ -170,7 +170,7 @@ export const usePoloStore = create<PoloState>((set, get) => ({
       canvas.toBlob((blob) => {
         if (!blob) {
           console.error('Failed to create image blob');
-          get().showToast('Failed to save image', 'error');
+          get().showToast('Kan afbeelding niet opslaan', 'error');
           return;
         }
 
@@ -178,19 +178,19 @@ export const usePoloStore = create<PoloState>((set, get) => ({
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-        link.download = `shirt-design-${timestamp}.png`;
+        link.download = `shirt-ontwerp-${timestamp}.png`;
         link.href = url;
         link.click();
 
         // Clean up
         URL.revokeObjectURL(url);
         
-        get().showToast('Image saved successfully!', 'success');
+        get().showToast('Afbeelding succesvol opgeslagen!', 'success');
         console.log('✅ Model saved as image');
       }, 'image/png', 1.0);
     } catch (error) {
       console.error('Error saving image:', error);
-      get().showToast('Failed to save image', 'error');
+      get().showToast('Kan afbeelding niet opslaan', 'error');
     }
   },
   
