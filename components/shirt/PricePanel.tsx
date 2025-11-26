@@ -3,7 +3,7 @@ import { buttonColors, buttonMaterials, clothColors, clothMaterials, STEPS } fro
 import { usePoloStore } from '@/app/store';
 
 export default function PricePanel() {
-  const BASE_PRICE = 79.00; // Base shirt price
+  const BASE_PRICE = 79.00; // Base watch price
   
   const { config } = usePoloStore();
   

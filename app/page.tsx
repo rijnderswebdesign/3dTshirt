@@ -1,17 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import WatchViewer from '@/components/watch/ShirtViewer';
-import ConfigSidebar from '@/components/watch/ConfigSidebar';
-import ConfigPanel from '@/components/watch/ConfigPanel';
-import PricePanel from '@/components/watch/PricePanel';
-import NavigationBar from '@/components/watch/NavigationBar';
+import ShirtViewer from '@/components/shirt/ShirtViewer';
+import ConfigSidebar from '@/components/shirt/ConfigSidebar';
+import ConfigPanel from '@/components/shirt/ConfigPanel';
+import PricePanel from '@/components/shirt/PricePanel';
+import NavigationBar from '@/components/shirt/NavigationBar';
 import ToastNotification from '@/components/ToastNotification';
 import GlobalLoader from '@/components/GlobalLoader';
 import Image from 'next/image';
 import { useGLTF } from '@react-three/drei';
 import { usePoloStore } from './store';
-import TextLogoModal from '@/components/watch/TextLogoModal';
+import TextLogoModal from '@/components/shirt/TextLogoModal';
 
 export default function Home() {
   // Use Zustand store
@@ -62,7 +62,7 @@ export default function Home() {
     };
     
     // Preload the model
-    useGLTF.preload('/model/watch.glb');
+    useGLTF.preload('/model/shirt.glb');
     startProgress();
     
     // Complete loading after estimated time
@@ -95,7 +95,7 @@ export default function Home() {
                 <Image src="/images/logo.png" alt="logo" width={256} height={40} />
             </div>
             <div className="lg:w-[77vw] lg:h-[100vh] relative ">
-              <WatchViewer />
+              <ShirtViewer />
               <NavigationBar />
               <ConfigSidebar/>
             </div>

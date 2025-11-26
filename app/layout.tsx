@@ -5,8 +5,8 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'ARTIQ 3D - Watch Configurator',
-  description: 'Design your custom watch with our advanced 3D configurator. Choose materials, colors, and styles to create your perfect timepiece.',
+  title: 'ARTIQ 3D - Shirt Configurator',
+  description: 'Design your custom shirt with our advanced 3D configurator. Choose materials, colors, and styles to create your perfect timepiece.',
 };
 
 export default function RootLayout({
